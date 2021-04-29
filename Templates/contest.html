@@ -1,0 +1,222 @@
+{% include 'navbar.html' %}
+{% load static %}
+{% block title %}
+    <title></title>
+{% endblock title %}
+
+{% block css %}
+    <style>
+        html, body{
+            height:100%;
+            width:100%;
+          }
+          body{
+            height:100%; 
+            background: url("{% static 'Images/bg10.png' %}") no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color:white;
+          }
+        .main{
+            font-family: 'Montserrat', sans-serif;
+        }
+        .leaderboard{
+            height:300px;
+            background-color:rgba(0,0,0,0.5);
+            overflow:auto;
+            border:5px solid;
+            border-radius: 5px;
+        }
+        @media screen and (min-width:550px) {
+            .flx{
+                display: flex;
+                flex-direction: row;
+                justify-content: space-evenly;
+            }   
+        }
+        .content{
+            margin:2.5% 5%;
+          }
+        ::-webkit-scrollbar {
+            width: 6px;
+        } 
+        ::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+        } 
+        ::-webkit-scrollbar-thumb {
+            box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+        }
+        .countdown{
+            font-size:300%; font-weight:bold;
+        }
+        .contest_name{
+            font-size:300%;
+            font-weight: bold;
+            text-transform: lowercase;
+            margin-bottom: 0%;
+            margin-top:.5%;
+          }
+          @media (min-width:1150px) {
+            .heading{
+                display: flex;flex-direction:auto;justify-content:space-between;
+              }
+              .lft{
+                float:left;
+            }
+            .rht{
+                float:right;
+            }
+            .quote{
+                color:#fdc819;
+                padding:5% 0; 
+                font-weight: bold;
+            }
+            .tbl{
+                width:500px;
+            }
+          }
+          @media (max-width:1150px) {
+              .content{
+                  text-align: center;
+              }
+              .contest_name{
+                  font-size:175%;
+              }
+              .countdown{
+                  font-size:125%;
+              }
+              .end{
+                  content: "";
+                  display: none;
+              }
+              .quote{
+                  display:none;
+              }
+              .tbl{
+                  width: 100%;
+              }
+          }
+          .sub{
+              font-size:150%;
+              font-weight: 600;
+              padding-bottom: 5%;
+          }
+    </style>
+{% endblock css %}
+
+{% block content %}
+    
+    <div class="main">
+        <div class="content">
+            <div class="heading">
+                <div class="contest_name">{{contest.Name}}</div>
+                <div class="countdown">
+                    <table style="font-size: 30%;display:inline-block;background-color:rgba(0,0,0,0.8);border-radius:5px;">
+                        <tbody>
+                            <tr>
+                                <th style="border:15px solid transparent;text-align:center;color:#fdc819;">days | </th>
+                                <th style="border:15px solid transparent;text-align:center;color:#fdc819;">hrs | </th>
+                                <th style="border:15px solid transparent;text-align:center;color:#fdc819;">mins | </th>
+                                <th style="border:15px solid transparent;text-align:center;color:#fdc819;">secs</th>
+                            </tr>
+                            <tr>
+                                <td style="border:15px solid transparent;text-align:center;color:white" id="days">00</td>
+                                <td style="border:15px solid transparent;text-align:center;color:white" id="hours">00</td>
+                                <td style="border:15px solid transparent;text-align:center;color:white" id="minutes">00</td>
+                                <td style="border:15px solid transparent;text-align:center;color:white" id="seconds">00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </div>
+            </div>
+
+           <div class="lft">
+                <div class="sub">while(!(succeed = try()));</div>
+                <div>
+                    <a href="{{contest.Problem.url}}" class="btn btn-secondary" download>Problem Statement</a>
+                    <a href="{{contest.Dataset.url}}" class="btn btn-secondary" download>Datasets</a>
+                </div>
+                <form action="submission/{{contest.Name}}/" method="post" enctype='multipart/form-data'>
+                    {% csrf_token %}
+                    <label for="formFileLg" class="form-label">submit your output as zip file.</label>
+                    <input class="form-control form-control-lg" id="formFileLg" type="file" name="output" accept=".zip">
+                    <button type="submit" class="btn btn-danger" style="margin:5% 0;padding:2% 8%;">Submit</button>
+                </form>
+                <!-- <h1 class="quote">D-FORCE</h1> -->
+           </div>
+
+           <div class="rht">
+                <h2 align="center" style="letter-spacing: 5px;"><strong>LEADERBOARD</strong></h2>
+                <div class="leaderboard">
+                    <table class="tbl">
+                        <thead align="center" style="border-bottom: 5px solid;">
+                            <th style="font-size:150%; color:#fdc819">Rank</th>
+                            <th style="font-size:150%;color:#fdc819">Username</th>
+                            <th style="font-size:150%;color:#fdc819">Score</th>
+                        </thead>
+                        {% if submissions %}
+                            <tbody align="center">
+                                {% for submission in submissions %}
+                                    <tr>
+                                        <th style="font-size:125%">{{forloop.counter}}</th>
+                                        <th style="font-size:125%">{{submission.Profile.User.username}}</th>
+                                        <th style="font-size:125%">{{submission.Score}}</th>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        {% else %}
+                            <tbody>
+                                <tr align="center">
+                                    <td></td>
+                                    <td style="font-size: 150%;padding-top:15%;font-weight:bold;text-transform:uppercase;">No-Submission</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        {% endif %}
+                    </table>
+                </div>
+           </div> 
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script>
+        var end = new Date("{{end}}").getTime();
+        
+        var x = setInterval(function(){
+            var now = new Date().getTime();
+
+            var diff = end-now
+            var days = Math.floor(diff / (1000*60*60*24))
+            var hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60))
+            var minutes = Math.floor((diff % (1000*60*60)) / (1000*60))
+            var seconds = Math.floor((diff % (1000*60)) / 1000)
+
+            if(hours.toString().length == 1) hours="0"+hours
+            if(minutes.toString().length == 1) minutes="0"+minutes
+            if(seconds.toString().length == 1) seconds="0"+seconds
+            if(days.toString().length == 1) days="0"+days
+
+            $("#days")[0].innerHTML = days
+
+            $("#hours")[0].innerHTML = hours
+
+            $("#minutes")[0].innerHTML = minutes
+
+            $("#seconds")[0].innerHTML = seconds
+
+            if(days<=0 && minutes<=0 && hours<=0 && seconds<=0){
+                location.href = '/'
+              }
+
+            if(now>end) {
+                alert('Contest is over.')
+                clearInterval(x)
+                location.href = '/'
+            }
+        }, 1000)
+
+    </script>
+{% endblock script %}

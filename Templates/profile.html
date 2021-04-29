@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    <title></title>
+{% endblock title %}
+
+{% block css %}
+    <style>
+        html,body{
+            width:100%;
+            height:100%;
+        }
+        .main{
+            font-family: 'Montserrat', sans-serif;
+        }
+        #back:hover{
+            color: blue;
+        }
+        .butn{
+            background-color: transparent;
+            outline:none;
+            border:none;
+        }
+        .butn:focus{
+            background-color: transparent;
+            outline:none;
+            border:none;
+        }
+        .butn:hover{
+            opacity:0.9;
+            outline:none;
+            border:none;
+        }
+        .heading{
+            /*background-color:#f8f9fa!important;*/
+            font-size: 200%;
+            font-weight: 600;
+            padding: 2.5% 5% 2.5% 5%;
+            color:#ee6f57;
+        }
+        #name{
+            font-size: 175%;font-weight:bolder;font-family: 'Montserrat', sans-serif;color:#00334e;
+        }
+        .flx{
+            display: flex;
+            flex-direction:row;
+            justify-content: space-evenly;
+        }
+    </style>
+{% endblock css %}
+
+{% block content %}
+    
+    <div class="main">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding:2.5%">
+            <div class="container-fluid">
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              
+              <div class="navbar-brand">
+                <a class="navbar-brand" href="/" id="back">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16" style="margin-bottom: 2.5%;">
+                       <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                    </svg>
+                </a>
+                <a disabled id="name">clash of coders</a>
+              </div>
+              
+              <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                    
+                  </li>
+                  <li class="nav-item">
+
+                  </li>
+                  <li class="nav-item">
+                    
+                  </li>
+                </ul>
+                
+                <!-- Edit Image -->
+                <button type="button" class="butn" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-right:3.5%;">
+                    <img src="{{profile.Image.url}}" alt="" height="75px" width="75px" style="border-radius: 5px;">
+                </button>
+                
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Update Profile</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            
+                            <form action="update/profile/" method="post" enctype='multipart/form-data'>
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label
+                                    for="exampleFormControlInput1" class="form-label">New Profile Picture</label>
+                                    <input type="file" name="image" class="form-control" id="exampleFormControlInput1">
+                                </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </form>
+                    </div>
+                    </div>
+                </div>
+
+                <div style="display: flex;flex-direction:column; justify-content:space-between; padding-top:1.5%;">
+                    <div><p>{{user.email}}</p></div>
+                    <div>
+                        <a style="text-decoration:none;font-weight:bold;font-size:125%" href="/profile/signout/">Sign out</a>
+                    </div>
+                </div>
+
+              </div>
+            </div>
+          </nav>
+
+          <hr style="margin:0;">
+          {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert" style="text-align: center;">
+                    <h6 style="text-align: center; letter-spacing:2.5px; font-size:medium;">{{message|lower}}</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+          {% endif %}
+
+          <div class="heading">Your Competition Profile</div>
+
+          <div style="display:flex; flex-direction:row; justify-content:space-evenly">
+            <div style="width: 50%;">
+                <img src="{%static 'Images/logo2.png'%}" alt="" width="80%" height="80%" style="margin-left:5%;">
+            </div>
+            <div class="" style="width: 50%;">
+                
+                <form action="update/prf/" method="post" style="width: 75%;margin-left:5%; display:flex; flex-direction:column; justify-content:space-evenly;">
+                    
+                    {% csrf_token%}
+
+                    <div class="form-floating" style="margin-bottom: 5%;" action="update/prf/">
+                        <input type="text" class="form-control" id="floatingInputValue" name="nickname" value="@ {{profile.Nickname|lower}}" disabled pattern=".{4, }" title="nick name must be of atleast 4 charachters and do not remove @ from front.">
+                        <label for="floatingInputValue">nickname</label>
+                    </div>
+
+                    <div class="form-floating" style="margin-bottom: 5%;">
+                        <input type="text" class="form-control" id="floatingInputValue" name="phone" value="+91 {{profile.Phone}}" disabled>
+                        <label for="floatingInputValue">number</label>
+                    </div>
+
+                    <div class="form-floating" style="margin-bottom: 5%;">
+                        <input type="text" class="form-control" id="floatingInputValue" name="github" placeholder="{{profile.GitHub}}" value="{{profile.GitHub}}" disabled>
+                        <label for="floatingInputValue">GitHub</label>
+                    </div>
+
+                    <div class="form-floating" style="margin-bottom: 5%;">
+                        <input type="text" class="form-control" id="floatingInputValue" name="linkedin" placeholder="{{profile.LinkedIn}}" value="{{profile.LinkedIn}}" disabled>
+                        <label for="floatingInputValue">LinkedIn</label>
+                    </div>
+
+                    <div class="form-floating">
+                        <button type="submit" class="btn btn-group btn-primary" id="save">Save</button>
+                    </div>
+                </form>
+
+                <button class="btn btn-group btn-primary" id="edit" style="margin-left:5%;">Edit</button>
+
+                {% if request.user.is_superuser %}
+                    <div style="margin-left:5%; display:flex; flex-direction:column;width:25%; justify-content:space-evenly;margin-top:5%;">
+                        <a href="" class="btn btn-danger" id="download_data">Download</a>
+                    </div>
+                {% endif %}
+
+            </div>
+          </div>
+    </div>
+    
+{% endblock content %}
+
+{% block script %}
+    <script>
+            var data = "{{superuser}}"
+            data = data.replace("&quot;", "")
+            data = data.replace("\n&quot;", "")
+
+            $("#download_data").click(function(){
+                var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
+
+                saveAs(blob, "clash_of_coders_main_data.txt");
+            })
+
+        $("#save").hide()
+        $("#edit").click(function(){
+            var inputs = $("input")
+            for(var i=0; i<inputs.length; i++) {
+                inputs[i].disabled = false
+            }
+            $("#save").show()
+            $("#edit").hide()
+        })
+    </script>
+{% endblock script %}

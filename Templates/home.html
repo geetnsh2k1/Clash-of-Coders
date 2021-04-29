@@ -1,0 +1,179 @@
+{% include 'navbar.html' %}
+{% load static %}
+{% block title %}
+    <title></title>
+{% endblock title %}
+
+{% block css %}
+    <style>
+      html, body{
+        height:100%;
+        width:100%;
+      }
+      body{
+        height:100%; 
+        background: url("{% static 'Images/bg10.png' %}") no-repeat;
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color:rgb(250, 250, 250);
+      }
+      .main{
+          font-family: 'Montserrat', sans-serif;
+      }
+      .regist{
+          pointer-events: none;
+          opacity: 0.75;
+      }
+      @media (min-width:800px) {
+        .countdown{
+          float:right;
+        }
+        .lft{
+          float:left;width:75%;
+        }
+      }
+      @media (max-width:800px) {
+        .countdown{
+          margin: 2.5%;
+        }
+      }
+      .content{
+        margin:4% 5%;
+      }
+      .contest_name{
+        font-size:275%;
+        font-weight: bold;
+        text-transform: lowercase;
+        padding: 2.5%;
+        padding-bottom:4%;
+      }
+      .countdown{
+        font-size:150%;
+        font-weight: 600;
+        text-transform: lowercase;
+        padding:0%;
+        margin-top:4%;
+        color:whitesmoke;
+        padding-bottom:3%;
+      }
+      .dates{
+        font-size:150%;
+        font-weight: 700;
+        padding: 2.5%;
+        padding-top: 0;
+        padding-bottom:3%;
+      }
+      .registration{
+        padding: 2.5%;
+        padding-top: 0;
+        padding-bottom:3%;
+      }
+    </style>
+{% endblock css %}
+
+{% block content %}
+    
+    <div class="main">
+
+      <div class="content">
+          <div class="lft">
+            <div class="contest_name">{{contest.Name}}</div>
+            <div class="dates">{{contest.Start.date}}<span style="padding:0 1.5%;font-weight:100">at</span>{{initial}}</div>
+            <div style="padding:2.5%;padding-top:0;"><strong>{{c_h}}</strong> hour <strong>{{c_m}}</strong> minutes</div>
+
+            <div class="registration">
+              {% if upcoming%}
+                <a href="register/{{contest.Name}}/" class="btn btn-warning" id="reg">{{register}}</a>
+              {% else %}
+                {% if ongoing %}
+                  {% if request.user.is_authenticated %}
+                    <a href="contest/page/{{contest.Name}}/" class="btn btn-primary" id="part">participate now</a>
+                  {% else %}
+                    <a href="contest/page/{{contest.Name}}/" class="btn btn-danger" id="part">login to participate</a>
+                  {% endif %}
+                {% else %}
+                  <a href="/" class="btn btn-primary disabled">Contest Ended</a>
+                {% endif %}
+              {% endif %}
+            </div>
+            <div ><span class="dates" style="padding-left: 3%;">{{registered}}</span><span style="font-size: 110%;">ALREADY REGISTERED</span></div>
+          </div>
+
+          <div class="countdown">countdown</div>
+      </div>
+    </div>
+    
+{% endblock content %}
+
+{% block script %}
+    <script>
+        var register = "{{register}}"
+        if(register == "registered") {
+            $("#reg").attr('title', 'You have already registered for the contest.')
+            $("#reg").addClass("disabled")
+        }else if("{{request.user.is_authenticated}}" == "False"){
+          $("#reg").attr('title', 'You must be logged in to register for the contest.')
+          $("#reg").addClass("disabled")
+          $("#part").addClass("disabled")
+        }
+        
+        var time = "{{remaining}}"
+        var up = "{{upcoming}}"
+        var ongo = "{{ongoing}}"
+
+        if(up == "True"){
+          
+          var dest = new Date("{{start}}").getTime();
+          
+          var x = setInterval(function(){
+            var now = new Date().getTime();
+            var diff = dest-now
+            var days = Math.floor(diff / (1000*60*60*24))
+            var hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60))
+            var minutes = Math.floor((diff % (1000*60*60)) / (1000*60))
+            var seconds = Math.floor((diff % (1000*60)) / 1000)
+
+            if(hours.toString().length == 1) hours="0"+hours
+            if(minutes.toString().length == 1) minutes="0"+minutes
+            if(seconds.toString().length == 1) seconds="0"+seconds
+
+            $(".countdown")[0].innerHTML = days+" days "+hours+" : "+minutes+" : "+seconds
+
+            if(days<=0 && minutes<=0 && hours<=0 && seconds<=0){
+              //alert("Please, refresh the page to enter the contest.")
+              location.reload();
+              clearInterval(x)
+            }
+
+          }, 1000)
+
+        }else if(ongo == "True"){
+
+          var dest = new Date("{{end}}").getTime();
+
+          var x = setInterval(function(){
+            var now = new Date().getTime();
+            var diff = dest-now
+            var days = Math.floor(diff / (1000*60*60*24))
+            var hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60))
+            var minutes = Math.floor((diff % (1000*60*60)) / (1000*60))
+            var seconds = Math.floor((diff % (1000*60)) / 1000)
+
+            if(hours.toString().length == 1) hours="0"+hours
+            if(minutes.toString().length == 1) minutes="0"+minutes
+            if(seconds.toString().length == 1) seconds="0"+seconds
+
+            if(days<=0 && minutes<=0 && hours<=0 && seconds<=0){
+              $("#part").addClass("disabled")
+              location.reload()
+              clearInterval(x)
+            }
+            $(".countdown")[0].innerHTML = days+" days "+hours+" : " +minutes+" : "+seconds
+
+          }, 1000)
+
+        }
+
+    </script>
+{% endblock script %}

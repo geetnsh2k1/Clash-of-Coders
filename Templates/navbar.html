@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title></title>
+{% endblock title %}
+
+{% block css %}
+    <style>
+        .main{
+          font-family: 'Montserrat', sans-serif;
+        }
+        .navbar{
+            width: 100%;
+            display: flex;
+            /*background-color:rgb(250, 250, 250);
+            box-shadow: 4px 4px 2px #8b8a8a;*/
+            padding: 2%;
+        }
+
+        .blue-btn{
+            background-color: #0d81d3;
+            color:white;
+            padding: 7.5px 15px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0px 2px 2px #668488;
+            outline:none;
+            font-size: small;
+        }
+        .blue-btn:hover{
+            background-color: #3998e0;
+            box-shadow: 0px 3.5px 3.5px #668488;
+        }
+        .blue-btn:focus{
+            border:none;
+            outline: none;
+        }
+        *:focus {
+            outline: 0 !important;
+        }
+        a{
+            font-size:small;
+        }
+        li{
+            margin-top: 1.5%;
+            margin-left: 5%;
+        }
+        .dp{
+          height: 50px;
+          width: 50px;
+          border:0px solid;
+          border-radius: 25px;
+        }
+        .ip{
+          margin-top: 2.5%;
+        }
+        .dropdown-menu {
+          min-width: 300px !important;
+      }
+      @media screen and (min-device-width:1000px) {
+         
+      }
+      .view{
+        float: right;text-decoration:none;color:rgb(67, 67, 219); font-weight:bold; font-size:110%;
+      }
+      .view:hover{
+        color: rgb(56, 198, 250);
+      }
+    </style>
+{% endblock css %}
+
+{% block content %}
+    
+    <div class="main">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              
+              <a class="navbar-brand" href="/" style="color:#00334e;
+              margin:1% 0%;margin-right:2.5%;"><span style="font-size:150%;font-weight: 900;">clash of coders</span></a>
+
+              <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                <ul class="navbar-nav me-auto mb-5 mb-lg-0">
+                  <!-- <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/about/">About</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/schedules/">Schedules</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/rules/">Rules</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/faq/">FAQ</a>
+                  </li> -->
+                </ul>
+                <div class="navbar-brand" id="personal">
+                
+                  {% if user.is_authenticated %}
+                      
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                        <img class="dp" src="{{profile.Image.url}}" alt="">
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-lg-end">
+                        
+                        <li>
+                          <div style="font-size: 75%;">Signed in as:</div>
+                          <strong>{{user.email}}</strong>
+                        </li>
+  
+                        <li style="margin:5%; padding-bottom:10%;padding-top:5%;">
+                          <form action="/profile/signout/" method="get" style="float:left">
+                            <button type="submit" class="btn btn-primary btn-sm">Sign out</button>
+                          </form>
+                          <a href="/profile/{{user.username}}/" class="view">View Profile</a>
+                        </li>
+  
+                      </ul>
+                    </div>
+  
+  
+                  {% else %}
+                    <!-- Sign in -->
+                    <div class="modal fade" id="exampleModalToggle" aria-labelledby="exampleModalToggleLabel" tabindex="-1" style="display: none;" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-scrollable">
+                        
+                        <div class="modal-content">
+                          
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalToggleLabel">Sign in</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          
+                          <div class="modal-body" align="center" style="display:flex; flex-direction:column; justify-content:space-evenly">
+  
+                            <form action="/profile/signin/" method="post" style="padding: 0 15%;">
+                              {% csrf_token %}
+                              <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Username</label>
+                                <input type="text" class="form-control" name="username" id="exampleInputEmail1" aria-describedby="emailHelp">
+                              </div>
+  
+                              <div class="mb-3">
+                                <label for="exampleInputPassword1" class="form-label">Password</label>
+                                <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+                              </div>
+  
+                              <button type="submit" class="btn btn-success">Sign in</button>
+                            </form>
+  
+                            <div>
+                              <a href="#" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" data-bs-dismiss="modal">Doesn't have an account? Create one</a>
+                            </div>
+  
+                          </div>
+  
+                        </div>
+  
+                      </div>
+                    </div>
+  
+                    <div class="modal fade" id="exampleModalToggle2" aria-labelledby="exampleModalToggleLabel2" tabindex="-1" style="display: none;" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalToggleLabel2">Sign up</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">                              
+                              <form action="/profile/signup/" method="post" class="row g-3">
+                                {% csrf_token %}
+  
+                                <div class="col-md-6">
+                                  <label for="firstname" class="form-label">First Name</label>
+                                  <input type="text" name="f_name" class="form-control" id="firstname" required>
+                                </div>
+                                <div class="col-md-6">
+                                  <label for="lastname" class="form-label">Last Name</label>
+                                  <input type="text" name="l_name" class="form-control" id="lastname" required>
+                                </div>
+  
+                                <div class="col-md-2">
+                                  <label for="age" class="form-label">Age</label>
+                                  <input type="number" name="age" class="form-control" id="age" required>
+                                </div>
+                                <div class="col-md-10">
+                                  <label for="phonenumber" class="form-label">Phone Number</label>
+                                  <input type="text" name="phone" class="form-control" id="phonenumber" required pattern="[6-9]{1}[0-9]{9}" title="Phone number must be of 10 digits & must be without 0 and country code.">
+                                </div>
+  
+                                <div class="col-md-12">
+                                  <label for="username" class="form-label">Username</label>
+                                  <input type="text" name="username" class="form-control" id="username" pattern=".{4, }" title="Must contains 4 characters." required>
+                                </div>
+  
+                                <div class="col-md-12">
+                                  <label for="inputEmail4" class="form-label">Email</label>
+                                  <input type="email" name="email" class="form-control" id="inputEmail4" required>
+                                </div>
+  
+                                <div class="col-md-12">
+                                  <label for="collegename" class="form-label">College</label>
+                                  <input type="text" name="college" class="form-control" id="collegename" required>
+                                </div>
+  
+                                <div class="col-md-12">
+                                  <label for="profession" class="form-label">Profession</label>
+                                  <select name="profession" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" required>
+                                    <option selected disabled>Open this select menu</option>
+                                    <option value="1">Student</option>
+                                    <option value="2">Professional</option>
+                                    <option value="3">Decline to answer</option>
+                                  </select>
+                                </div>
+  
+                                <div class="col-md-12">
+                                  <label for="level" class="form-label">Level</label>
+                                  <select name="level" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" required>
+                                    <option selected disabled>Open this select menu</option>
+                                    <option value="1">Amateur</option>
+                                    <option value="2">Beginner</option>
+                                    <option value="3">Intermediate</option>
+                                    <option value="3">Advance</option>
+                                    <option value="3">Expert</option>
+                                  </select>
+                                </div>
+  
+                                <div class="col-md-12">
+                                  <label for="inputPassword4" class="form-label">Password</label>
+                                  <input type="password" id="pwd" name="password" class="form-control" id="inputPassword4" required pattern=".{8,}" title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters.">
+                                </div>
+  
+                                <div class="col-12" align="center">
+                                  <button id="signup" type="submit" class="btn btn-success">Sign up</button>
+                                </div>
+                              </form>
+                          </div>
+                          <div class="modal-footer">
+                            <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" data-bs-dismiss="modal">Back to Sign in</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <a class="btn btn-primary" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Sign in</a>
+  
+                  {% endif %}
+                </div>
+              </div>
+
+            </div>
+        </nav>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert" style="text-align: center;">
+                    <h6 style="text-align: center; letter-spacing:2.5px; font-size:medium;">{{message|lower}}</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+{% endblock content %}
+
+{% block script %}
+    <script></script>
+{% endblock script %}
