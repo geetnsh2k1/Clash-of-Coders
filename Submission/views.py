@@ -58,6 +58,9 @@ def submission(request, Name):
                 input=str(data))
                 result = eval(result.stdout)
                 
+                if result['total'] == None:
+                    return redirect('home')
+                
                 try:
                     old = Submission.objects.get(Profile=profile, Contest_Name=contest.Name)
                     old.Previous = result['out']

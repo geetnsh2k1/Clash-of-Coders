@@ -29,6 +29,7 @@ urlpatterns = [
     url('profile/', include('Profile.urls')),
     url('contest/', include('Contest.urls')),
     url('submission/', include('Submission.urls')),
+    path('admin/', admin.site.urls),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
